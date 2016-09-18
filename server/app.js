@@ -20,12 +20,15 @@ app.get('/', function (req, res){
   res.sendFile(path.resolve('public/index.html'));
 }); // end base url
 
-// set up public folder
-app.use(express.static('public'));
+// get jokes
+app.get('/getJokes', urlencodedParser, function(req, res){
+  res.send(jokes);
+});
 
-//set up a route/url to go to in order to access public
+// post jokes
 app.post('/jokebook', urlencodedParser, function (req, res) {
   console.log('jokebook hit', req.body);
+  jokes.push(req.body);
   // assemble objectToSend
   var objectToSend = {
     whoseJoke: req.body.whoseJoke,
@@ -34,6 +37,9 @@ app.post('/jokebook', urlencodedParser, function (req, res) {
   };
   res.send( objectToSend );
 });
+
+// set up public folder
+app.use(express.static('public'));
 
 // initial jokes provided by the client
 jokes = [
